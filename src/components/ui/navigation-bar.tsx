@@ -25,7 +25,6 @@ export const NavigationBar = ({ user, userProfile }: NavigationBarProps) => {
   const navigation = [
     { name: "Inicio", href: "/" },
     { name: "Artículos", href: "/articles" },
-    { name: "Categorías", href: "/categories" },
     { name: "Nosotros", href: "/about" },
     { name: "Contacto", href: "/contact" },
   ]
@@ -86,29 +85,25 @@ export const NavigationBar = ({ user, userProfile }: NavigationBarProps) => {
           {/* Desktop User Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
-              <>
-                {userProfile?.role === 'admin' && (
-                  <Link to="/admin">
-                    <Button variant="outline" size="sm">
-                      Admin
-                    </Button>
-                  </Link>
-                )}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      {userProfile?.display_name || user.email}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={handleSignOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Cerrar Sesión
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    {userProfile?.display_name || user.email}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {userProfile?.role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">Admin Panel</Link>
                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
+                  )}
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Cerrar Sesión
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link to="/auth">
                 <HeroButton size="sm">Iniciar Sesión</HeroButton>
@@ -158,7 +153,7 @@ export const NavigationBar = ({ user, userProfile }: NavigationBarProps) => {
                         className="block px-3 py-2 text-sm text-primary hover:bg-primary/5 rounded-md"
                         onClick={() => setIsOpen(false)}
                       >
-                        Admin
+                        Admin Panel
                       </Link>
                     )}
                     <button

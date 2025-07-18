@@ -64,27 +64,43 @@ export default function Home() {
         
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            <span className="block">Estrategias</span>
-            <span className="block text-white/90">Deportivas</span>
+            <span className="block">Estrategas</span>
+            <span className="block text-white/90">Deportivo</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Descubre análisis expertos, estrategias avanzadas y contenido exclusivo 
-            del mundo deportivo profesional
+            Tu fuente definitiva para análisis deportivos, estrategias 
+            ganadoras y contenido exclusivo del mundo del deporte
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link to="/articles">
               <HeroButton size="xl" className="bg-white text-primary hover:bg-white/90">
-                Explorar Artículos
+                Explorar Contenido
                 <ArrowRight className="ml-2 h-5 w-5" />
               </HeroButton>
             </Link>
             <Link to="/about">
               <HeroButton variant="hero-outline" size="xl" className="border-white text-white hover:bg-white hover:text-primary">
-                Conoce Más
+                Ver Análisis
               </HeroButton>
             </Link>
+          </div>
+
+          {/* Stats Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-white mb-2">500+</div>
+              <div className="text-white/80 text-lg">Artículos Publicados</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-white mb-2">50K+</div>
+              <div className="text-white/80 text-lg">Lectores Mensuales</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-white mb-2">24/7</div>
+              <div className="text-white/80 text-lg">Cobertura Deportiva</div>
+            </div>
           </div>
         </div>
       </section>
