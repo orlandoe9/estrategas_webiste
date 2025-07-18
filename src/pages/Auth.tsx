@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
@@ -10,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { supabase } from "@/integrations/supabase/client"
 import { useAuth } from "@/hooks/useAuth"
+import { AdminSetup } from "@/components/AdminSetup"
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false)
@@ -108,6 +110,9 @@ export default function Auth() {
             Estrategas
           </h1>
         </div>
+
+        {/* Admin Setup Component */}
+        <AdminSetup />
 
         <Card className="elegant-shadow">
           <CardHeader className="text-center">
