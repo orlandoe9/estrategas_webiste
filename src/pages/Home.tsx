@@ -14,7 +14,7 @@ export default function Home() {
     const fetchFeaturedArticles = async () => {
       try {
         const { data: articles, error } = await supabase
-          .from('articles')
+          .from('posts')
           .select('*, profiles(display_name)')
           .eq('published', true)
           .order('created_at', { ascending: false })
@@ -23,7 +23,7 @@ export default function Home() {
         if (error) throw error
         setFeaturedArticles(articles || [])
       } catch (error) {
-        console.error('Error fetching articles:', error)
+        console.error('Error fetching posts:', error)
       } finally {
         setLoading(false)
       }
@@ -80,9 +80,9 @@ export default function Home() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </HeroButton>
             </Link>
-            <Link to="/about">
+            <Link to="/admin">
               <HeroButton variant="hero-outline" size="xl" className="border-white text-white hover:bg-white hover:text-primary">
-                Ver Análisis
+                Panel Admin
               </HeroButton>
             </Link>
           </div>
