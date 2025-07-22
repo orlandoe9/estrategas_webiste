@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Search, Filter, Calendar } from "lucide-react"
+import { Search, Filter, Calendar, Tag } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArticleCard } from "@/components/ui/article-card"
@@ -9,17 +9,34 @@ import { supabase } from "@/integrations/supabase/client"
 
 export default function Articles() {
   const [articles, setArticles] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("newest")
+  const [selectedCategory, setSelectedCategory] = useState("all")
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchData = async () => {
       try {
+        // Fetch categories
+        const { data: categoriesData, error: categoriesError } = await supabase
+          .from('custom_sections')
+          .select('*')
+          .order('name', { ascending: true })
+
+        if (categoriesError) throw categoriesError
+        setCategories(categoriesData || [])
+
+        // Fetch posts
         let query = supabase
-          .from('articles')
-          .select('*, profiles(display_name)')
+          .from('posts')
+          .select('*, profiles(display_name), custom_sections(name)')
           .eq('published', true)
+
+        // Apply category filter
+        if (selectedCategory !== "all") {
+          query = query.eq('section_id', selectedCategory)
+        }
 
         // Apply sorting
         if (sortBy === "newest") {
@@ -35,14 +52,14 @@ export default function Articles() {
         if (error) throw error
         setArticles(data || [])
       } catch (error) {
-        console.error('Error fetching articles:', error)
+        console.error('Error fetching data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchArticles()
-  }, [sortBy])
+    fetchData()
+  }, [sortBy, selectedCategory])
 
   const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -75,6 +92,21 @@ export default function Articles() {
           </div>
 
           <div className="flex gap-4 w-full sm:w-auto">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full sm:w-48">
+                <Tag className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Categoría" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas las Categorías</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-full sm:w-48">
                 <Calendar className="h-4 w-4 mr-2" />
@@ -115,10 +147,11 @@ export default function Articles() {
                 id={article.id}
                 title={article.title}
                 excerpt={article.excerpt}
-                imageUrl={article.image_url}
+                imageUrl={article.images?.[0]}
                 authorName={article.profiles?.display_name}
                 publishedAt={article.created_at}
                 isPublished={article.published}
+                category={article.custom_sections?.name}
               />
             ))}
           </div>
@@ -135,6 +168,7 @@ export default function Articles() {
               <Button variant="outline" onClick={() => {
                 setSearchTerm("")
                 setSortBy("newest")
+                setSelectedCategory("all")
               }}>
                 Limpiar Filtros
               </Button>
