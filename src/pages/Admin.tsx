@@ -64,13 +64,8 @@ const Admin = () => {
   const [userProfile, setUserProfile] = useState<any>(null)
 
   useEffect(() => {
-    if (!user) {
-      navigate("/auth")
-      return
-    }
-    fetchUserProfile()
     fetchData()
-  }, [user, navigate])
+  }, [])
 
   const fetchUserProfile = async () => {
     if (!user) return
