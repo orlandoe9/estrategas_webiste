@@ -31,7 +31,7 @@ interface Blog {
   title: string
   content: string
   excerpt: string
-  image_url?: string
+  images?: string[]
   published: boolean
   created_at: string
   section_id?: string
@@ -54,10 +54,11 @@ const Admin = () => {
     title: "",
     content: "",
     excerpt: "",
-    image_url: "",
+    images: [] as string[],
     section_id: "",
     published: false
   })
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const { toast } = useToast()
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -147,13 +148,42 @@ const Admin = () => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFiles(Array.from(e.target.files))
+    }
+  }
+
+  const uploadImages = async (files: File[]) => {
+    const uploadPromises = files.map(async (file) => {
+      const fileName = `${Date.now()}-${file.name}`
+      const { data, error } = await supabase.storage
+        .from('blog-images')
+        .upload(fileName, file)
+      
+      if (error) throw error
+      return `https://jcrlopoitculeufndpab.supabase.co/storage/v1/object/public/blog-images/${fileName}`
+    })
+    
+    return Promise.all(uploadPromises)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     try {
+      let imageUrls = formData.images
+      
+      // Upload new images if any
+      if (selectedFiles.length > 0) {
+        const uploadedUrls = await uploadImages(selectedFiles)
+        imageUrls = [...imageUrls, ...uploadedUrls]
+      }
+
       const blogData = {
         ...formData,
-        author_id: user.id,
+        images: imageUrls,
+        author_id: user?.id || null,
         excerpt: formData.excerpt || formData.content.substring(0, 150) + "..."
       }
 
@@ -180,10 +210,11 @@ const Admin = () => {
         title: "",
         content: "",
         excerpt: "",
-        image_url: "",
+        images: [],
         section_id: "",
         published: false
       })
+      setSelectedFiles([])
       fetchData()
     } catch (error) {
       console.error('Error saving article:', error)
@@ -201,10 +232,11 @@ const Admin = () => {
       title: blog.title,
       content: blog.content,
       excerpt: blog.excerpt || "",
-      image_url: blog.image_url || "",
+      images: blog.images || [],
       section_id: blog.section_id || "",
       published: blog.published
     })
+    setSelectedFiles([])
     setIsDialogOpen(true)
   }
 
@@ -283,10 +315,11 @@ const Admin = () => {
                       title: "",
                       content: "",
                       excerpt: "",
-                      image_url: "",
+                      images: [],
                       section_id: "",
                       published: false
                     })
+                    setSelectedFiles([])
                   }}
                 >
                   <Plus className="mr-2 h-4 w-4" />
@@ -332,13 +365,32 @@ const Admin = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="image_url">URL de Imagen</Label>
+                    <Label htmlFor="images">Imágenes</Label>
                     <Input
-                      id="image_url"
-                      value={formData.image_url}
-                      onChange={(e) => handleInputChange("image_url", e.target.value)}
-                      placeholder="https://ejemplo.com/imagen.jpg"
+                      id="images"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="cursor-pointer"
                     />
+                    {selectedFiles.length > 0 && (
+                      <div className="text-sm text-muted-foreground">
+                        {selectedFiles.length} archivo(s) seleccionado(s)
+                      </div>
+                    )}
+                    {formData.images.length > 0 && (
+                      <div className="grid grid-cols-4 gap-2 mt-2">
+                        {formData.images.map((url, index) => (
+                          <img 
+                            key={index} 
+                            src={url} 
+                            alt={`Preview ${index + 1}`}
+                            className="w-full h-20 object-cover rounded border"
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-2">

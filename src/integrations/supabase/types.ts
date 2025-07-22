@@ -21,7 +21,7 @@ export type Database = {
           created_at: string
           excerpt: string | null
           id: string
-          image_url: string | null
+          images: string[] | null
           published: boolean | null
           title: string
           updated_at: string
@@ -32,7 +32,7 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
-          image_url?: string | null
+          images?: string[] | null
           published?: boolean | null
           title: string
           updated_at?: string
@@ -43,7 +43,7 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
-          image_url?: string | null
+          images?: string[] | null
           published?: boolean | null
           title?: string
           updated_at?: string
@@ -84,7 +84,7 @@ export type Database = {
           created_at: string
           excerpt: string | null
           id: string
-          image_url: string | null
+          images: string[] | null
           published: boolean | null
           section_id: string
           title: string
@@ -96,7 +96,7 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
-          image_url?: string | null
+          images?: string[] | null
           published?: boolean | null
           section_id: string
           title: string
@@ -108,7 +108,7 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
-          image_url?: string | null
+          images?: string[] | null
           published?: boolean | null
           section_id?: string
           title?: string
