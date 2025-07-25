@@ -35,6 +35,7 @@ interface Blog {
   published: boolean
   created_at: string
   section_id?: string
+  author_id: string
   profiles?: { display_name: string } | null
 }
 
@@ -99,14 +100,31 @@ const Admin = () => {
 
   const fetchData = async () => {
     try {
-      // Fetch blogs (posts) with proper join
+      // Fetch blogs (posts) with manual join to avoid foreign key issues
       const { data: blogsData, error: blogsError } = await supabase
         .from('posts')
-        .select('*, profiles(display_name)')
+        .select('*')
         .order('created_at', { ascending: false })
 
       if (blogsError) throw blogsError
-      setBlogs(blogsData as Blog[])
+
+      // Fetch author profiles separately and join manually
+      const blogsWithProfiles = await Promise.all(
+        (blogsData || []).map(async (blog) => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('display_name')
+            .eq('user_id', blog.author_id)
+            .single()
+          
+          return {
+            ...blog,
+            profiles: profile || null
+          }
+        })
+      )
+      
+      setBlogs(blogsWithProfiles as Blog[])
 
       // Fetch sections
       const { data: sectionsData, error: sectionsError } = await supabase
