@@ -27,10 +27,10 @@ export default function Articles() {
         if (categoriesError) throw categoriesError
         setCategories(categoriesData || [])
 
-        // Fetch posts
+        // Fetch posts with manual joins to avoid foreign key issues
         let query = supabase
           .from('posts')
-          .select('*, profiles(display_name), custom_sections(name)')
+          .select('*')
           .eq('published', true)
 
         // Apply category filter
@@ -47,10 +47,36 @@ export default function Articles() {
           query = query.order('title', { ascending: true })
         }
 
-        const { data, error } = await query
+        const { data: postsData, error: postsError } = await query
 
-        if (error) throw error
-        setArticles(data || [])
+        if (postsError) throw postsError
+
+        // Manually join profiles and custom_sections data
+        const articlesWithRelations = await Promise.all(
+          (postsData || []).map(async (post) => {
+            // Fetch author profile
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('display_name')
+              .eq('user_id', post.author_id)
+              .single()
+
+            // Fetch section name
+            const { data: section } = await supabase
+              .from('custom_sections')
+              .select('name')
+              .eq('id', post.section_id)
+              .single()
+
+            return {
+              ...post,
+              profiles: profile || null,
+              custom_sections: section || null
+            }
+          })
+        )
+
+        setArticles(articlesWithRelations)
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
