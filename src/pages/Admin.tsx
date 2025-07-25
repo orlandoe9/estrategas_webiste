@@ -65,6 +65,7 @@ const Admin = () => {
   const [userProfile, setUserProfile] = useState<any>(null)
 
   useEffect(() => {
+    fetchUserProfile()
     fetchData()
   }, [])
 
@@ -98,31 +99,14 @@ const Admin = () => {
 
   const fetchData = async () => {
     try {
-      // Fetch blogs (posts)
+      // Fetch blogs (posts) with proper join
       const { data: blogsData, error: blogsError } = await supabase
         .from('posts')
-        .select('*')
+        .select('*, profiles(display_name)')
         .order('created_at', { ascending: false })
 
       if (blogsError) throw blogsError
-      
-      // Fetch author profiles separately
-      const blogsWithProfiles = await Promise.all(
-        (blogsData || []).map(async (blog) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('display_name')
-            .eq('user_id', blog.author_id)
-            .single()
-          
-          return {
-            ...blog,
-            profiles: profile
-          }
-        })
-      )
-      
-      setBlogs(blogsWithProfiles as Blog[])
+      setBlogs(blogsData as Blog[])
 
       // Fetch sections
       const { data: sectionsData, error: sectionsError } = await supabase
