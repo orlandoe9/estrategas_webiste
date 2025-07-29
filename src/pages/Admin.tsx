@@ -250,6 +250,7 @@ const Admin = () => {
         .from('posts')
         .delete()
         .eq('id', id)
+        console.log(id);
 
       if (error) throw error
       toast({ title: "Blog eliminado exitosamente" })
