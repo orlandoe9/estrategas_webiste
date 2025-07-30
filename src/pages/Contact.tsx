@@ -73,9 +73,9 @@ const Contact = () => {
       <section className="bg-gradient-primary text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="text-primary-glow">Conecta</span> con Nosotros
+            <span className="text-primary-glow">Conecta con Nosotros </span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-black/90 max-w-3xl mx-auto leading-relaxed">
             ¿Tienes una historia que contar? ¿Una pregunta sobre estrategias? 
             Estamos aquí para escucharte.
           </p>
@@ -149,7 +149,7 @@ const Contact = () => {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-primary hover:bg-gradient-primary/90 transition-smooth"
+                    className="w-full bg-primary hover:bg-primary/90 transition-smooth"
                   >
                     {isSubmitting ? (
                       "Enviando..."
@@ -183,7 +183,7 @@ const Contact = () => {
                 <Card key={index} className="hover-scale transition-smooth elegant-shadow">
                   <CardContent className="p-6 flex items-start gap-4">
                     <div className="p-3 bg-gradient-primary rounded-lg">
-                      <info.icon className="h-6 w-6 text-white" />
+                      <info.icon className="h-6 w-6 text-black" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">
@@ -202,16 +202,16 @@ const Contact = () => {
             </div>
 
             {/* Additional Info */}
-            <Card className="bg-gradient-primary text-white elegant-shadow">
+            <Card className="bg-gradient-primary text-black elegant-shadow">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-3">
                   ¿Eres creador de contenido deportivo?
                 </h3>
-                <p className="text-white/90 mb-4">
+                <p className="text-black/90 mb-4">
                   Si eres un analista, ex-jugador, entrenador o simplemente un 
                   apasionado del deporte con ideas únicas, nos encantaría colaborar contigo.
                 </p>
-                <Button variant="secondary" className="bg-white text-primary hover:bg-white/90">
+                <Button variant="secondary" className="bg-primary text-white hover:bg-primary/90">
                   Únete al Equipo
                 </Button>
               </CardContent>

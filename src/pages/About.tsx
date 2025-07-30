@@ -49,9 +49,9 @@ const About = () => {
       <section className="bg-gradient-primary text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Nosotros Somos <span className="text-primary-glow">Estrategas</span>
+            <span className="text-primary-glow">Nosotros Somos Estrategas</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-black/90 max-w-3xl mx-auto leading-relaxed">
             Donde la pasión por el deporte se encuentra con el análisis profundo. 
             Creamos contenido que va más allá del resultado final.
           </p>

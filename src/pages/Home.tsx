@@ -15,10 +15,10 @@ export default function Home() {
       try {
         const { data: articles, error } = await supabase
           .from('posts')
-          .select('*, profiles(display_name)')
+          .select('*')
           .eq('published', true)
           .order('created_at', { ascending: false })
-          .limit(6)
+          .limit(3)
 
         if (error) throw error
         setFeaturedArticles(articles || [])
@@ -75,13 +75,13 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link to="/articles">
-              <HeroButton size="xl" className="bg-white text-primary hover:bg-white/90">
+              <HeroButton size="xl" className="border-white text-white hover:bg-white">
                 Explorar Contenido
                 <ArrowRight className="ml-2 h-5 w-5" />
               </HeroButton>
             </Link>
             <Link to="/admin">
-              <HeroButton variant="hero-outline" size="xl" className="border-white text-white hover:bg-white hover:text-primary">
+              <HeroButton variant="hero-outline" size="xl" className="border-white text-white hover:bg-white">
                 Panel Admin
               </HeroButton>
             </Link>
@@ -162,16 +162,17 @@ export default function Home() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 {featuredArticles.map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    id={article.id}
-                    title={article.title}
-                    excerpt={article.excerpt}
-                    imageUrl={article.image_url}
-                    authorName={article.profiles?.display_name}
-                    publishedAt={article.created_at}
-                    isPublished={article.published}
-                  />
+                 <ArticleCard
+                key={article.id}
+                id={article.id}
+                title={article.title}
+                excerpt={article.excerpt}
+                imageUrl={article.images?.[0]}
+                authorName={article.profiles?.display_name}
+                publishedAt={article.created_at}
+                isPublished={article.published}
+                category={article.custom_sections?.name}
+              />
                 ))}
               </div>
 
